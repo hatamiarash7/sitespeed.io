@@ -50,7 +50,7 @@ module.exports = async function(context, commands) {
  try {
  await commands.click.byClassName('gf-timepicker-nav-btn');
  await commands.wait.byTime(1000);
- // We give the paghe an alias that will be used if the metrics is sent to Graphite/InfluxDB 
+ // We give the page an alias that will be used if the metrics is sent to Graphite/InfluxDB 
  await commands.measure.start('pageTimingMetricsLast30Days');
  await commands.click.byLinkTextAndWait('Last 30 days');
  await commands.measure.stop();
@@ -67,6 +67,6 @@ module.exports = async function(context, commands) {
 Then you run it by passing on the script file, using  ```--spa``` to notify that you are testing a single page application and ```--multi``` that you plan to test multiple pages within one run.
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} thirtydays.js --spa --multi
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} thirtydays.js --spa --multi
 ~~~
 

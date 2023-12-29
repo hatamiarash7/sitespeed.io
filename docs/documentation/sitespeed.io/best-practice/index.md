@@ -16,29 +16,29 @@ twitterdescription:
 * Lets place the TOC here
 {:toc}
 
-Here we keep questions that are frequently asked at [Slack](https://sitespeedio.herokuapp.com/) or at [GitHub](https://github.com/sitespeedio/sitespeed.io/issues/new).
+Here we keep questions that are frequently asked at [Slack](https://join.slack.com/t/sitespeedio/shared_invite/zt-296jzr7qs-d6DId2KpEnMPJSQ8_R~WFw) or at [GitHub](https://github.com/sitespeedio/sitespeed.io/issues/new).
 
 ## Running tests
 Read this before you start to collect metrics.
 
 ### How do I test cached pages?
-How do I test cached pages? The easiest way to do that is to use the **--preURL** parameter:
+How do I test cached pages? The easiest way to do that is to use the `--preURL` parameter:
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --preURL https://www.sitespeed.io/documentation/ https://www.sitespeed.io/
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --preURL https://www.sitespeed.io/documentation/ https://www.sitespeed.io/
 ~~~
 
-In the example the browser will first go to https://www.sitespeed.io/documentation/ and then with a primed cache navigate to https://www.sitespeed.io/.
+In the example the browser will first go to https://www.sitespeed.io/documentation/ and then with a primed cache navigate to https://www.sitespeed.io/. You can also use [scripting](../scripting/) if you don't mind writing code.
 
 ### How do I set a cookie?
-Since 7.2.0 the best way to add a cookie is by using <code>--cookie name=value</code> where the name is the name of the cookie and the value ... the value :) The cookie will be set on the domain that you test.
+You can add a cookie is by using <code>--cookie name=value</code> where the name is the name of the cookie and the value ... the value :) The cookie will be set on the domain that you test. You can also use  <code>--requestheader</code>  to set the cookie in the request header. If you use Chrome you can also us the [Chrome Devtools Protocol in scripting](/documentation/sitespeed.io/scripting/#chrome-devtools-protocol) for more complicated use cases.
 
 ### How do I test multiple pages in the same run?
 
 If you want to test multiple URLs, you can used line them up in the cli:
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io https://www.sitespeed.io/documentation/
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io https://www.sitespeed.io/documentation/
 ~~~
 
 You can also use a plain text file with one URL on each line. Create a file called urls.txt (but you can call it whatever you want):
@@ -57,24 +57,24 @@ http://www.yoursite.com/my/really/important/page/ Important_Page
 http://www.yoursite.com/where/we/are/ We_are
 ~~~
 
-And then you give feed the file to sitespeed.io:
+And then you feed the file to sitespeed.io:
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} urls.txt
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} urls.txt
 ~~~
 
 ### How many runs should I do on the same page to get stable metrics?
 How many runs depends on your site, and what you want to collect. Pat told us about how he is doing five runs when testing for Chrome. Hitting a URL 3-5 times is often ok when you want to fetch timing metrics, but increasing to 7-11 can give better values. Start low and if you see a lot of variations between runs, increase until you get some solid values.
 
-Getting timing metrics is one thing, but it’s also important to collect how your page is built. You need to keep track of the size of pages, how many synchronously loaded javascript you have and so on. For that kind of information you only need one run per URL.
+Getting timing metrics is one thing, but it’s also important to collect how your page is built. You need to keep track of the size of pages, how many synchronously loaded JavaScript you have and so on. For that kind of information you only need one run per URL.
 
 You should also try out our new setup with [WebPageReplay](../webpagereplay/).
 
 ### I want to test a user journey (multiple pages) how do I do that?
 Checkout the [scripting capabilities](../scripting/) that makes it easy to test multiple pages.
 
-### I want to test on different CPUs how do I do that?
-We currently don't built in support for changing the CPU. What we do know is that you should not use the built in support in Chrome or try to simulate slow CPUs by running on slow AWS instance. What should do is what WPTAgent do. You can check the code at [https://github.com/WPO-Foundation/wptagent/blob/master/wptagent.py](https://github.com/WPO-Foundation/wptagent/blob/master/wptagent.py) and do the same before you start a run and then remove it after the run.
+### I want to test on different CPU speeds how do I do that?
+If you use Chrome you can use <code>--chrome.CPUThrottlingRate</code>. However there's a bug in Chromedriver so this only works if you run with the `--headless` parameter.
 
 ### Throttle or not throttle your connection?
 **PLEASE, YOU NEED TO ALWAYS THROTTLE YOUR CONNECTION!** You should always throttle/limit the connectivity because it will make it easier for you to find regressions. If you don't do it, you can run your tests with different connectivity profiles and regressions/improvements that you see is caused by your servers flaky internet connection. Check out our [connectivity guide]({{site.baseurl}}/documentation/sitespeed.io/connectivity/).
@@ -88,7 +88,7 @@ When you run <code>--preURL</code> the browser starts, then access the preURL an
 
 If you use the <code>--preScript</code> or <code>--multi</code> feature, it is the same behavior, we don't clear the cache between the URL you want to test.
 
-### My pre/post script doesn't work?
+### My pre/post/scripting script doesn't work?
 We use Selenium pre/post script navigation. You can [read more](/documentation/sitespeed.io/prepostscript/) about of our pre/post script setup and focus on the [debug section](/documentation/sitespeed.io/prepostscript/#debuglog-from-your-script) if you have any problem.
 
 If you have problem with Selenium (getting the right element etc), PLEASE do not create issues in sitespeed.io. Head over to the [Selenium community](https://docs.seleniumhq.org/) and they can help you.
@@ -109,7 +109,7 @@ If you need to debug CLI parameters the best way is to turn on verbose logging. 
 There's a plugin bundled with sitespeed.io called *analysisstorer* plugin that isn't enabled by default. It stores the original JSON data from all analyzers (from Browsertime, Coach data, WebPageTest etc) to disk. You can enable this plugin:
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io --plugins.add analysisstorer
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io --plugins.add analysisstorer
 ~~~
 
 The JSON files for the whole run (summary files) will end up in *$RESULT/data/*. JSON for each individual page is stored in *$RESULT/data/pages/$PAGE/data/*.
@@ -120,33 +120,33 @@ By default the # part of a URL is stripped off from your page. Yep we know, it i
 If you have pages that are generated differently depending of what's after you #-sign, you can use the <code>--useHash</code> switch. Then all pages will be tested as a unique page.
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --useHash https://www.sitespeed.io/#/super
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --useHash https://www.sitespeed.io/#/super
 ~~~
 
 You can also use the <code>--urlAlias</code> if you want to give the page a friendly name. Use it multiple times if you have multiple URLs.
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --useHash --urlAlias super --urlAlias duper https://www.sitespeed.io/#/super https://www.sitespeed.io/#/duper
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --useHash --urlAlias super --urlAlias duper https://www.sitespeed.io/#/super https://www.sitespeed.io/#/duper
 ~~~
 
-## Servers
-What you should know before you choose where to run sitespeed.io.
-
-### Cloud providers
-We've been testing out different cloud providers (AWS, Google Cloud, Digital Ocean, Linode etc) and the winner for us has been AWS. We've been using c5.large and testing the same size (or bigger) instances on other providers doesn't give the same stable metric overtime.
-
-One important learning is that you can run on <60% usage on your server, and everything looks fine but the metrics will not be stable since your instance is not isolated from other things that runs on your servers.
-
-### Bare metal
-We haven't tested on bare metal so if you have, please let us know how it worked out.
-
-### Kubernetes
-On Kubernetes you cannot use tc or Docker networks to set the connectivity but there has been tries with [TSProxy](https://github.com/WPO-Foundation/tsproxy), check out [#1829](https://github.com/sitespeedio/sitespeed.io/issues/1819).
 
 ### Running tests from multiple locations
 Can I test the same URLs from different locations and how do I make sure they don't override each others data in Graphite?
 
-You should set different namespaces depending on location (**--graphite.namespace**). If you run one test from London, set the namespace to <code>--graphite.namespace sitespeed_io.london</code>. Then you can choose individual locations in the dropdown in the pre-made dashboards.
+You should set different namespaces depending on location (`--graphite.namespace`). If you run one test from London, set the namespace to <code>--graphite.namespace sitespeed_io.london</code>. Then you can choose individual locations in the dropdown in the pre-made dashboards.
+
+### Google Web Vitals
+To get Googles Web Vitals in your tests you need to use Chrome. sitespeed.io collects: First Contentful paint, Largest contentful paint, Cumulative Layout Shift, First Input Delay/Total Blocking time. 
+
+A good thing is to calibrate your test with the Chrome User Experience report data. Do that by run the [CrUx plugin](/documentation/sitespeed.io/crux/) and then try to tune what kind of connectivity setting you use and compare First and Largest contentful paint.
+
+To calibrate the Cumulative layout shift its good to [use scripting](/documentation/sitespeed.io/scripting/) and go to the page and [scroll the page](/documentation/sitespeed.io/scripting/#scroll-the-page-to-measure-cumulative-layout-shift).
+
+First Input Delay/Total Blocking time is harder. The best way is to test on a real mobile phone, preferable an older Android phone like Moto G5.
+
+### Google Page Speed Insights vs Lighthouse vs Chrome User Experience Report plugins
+
+It's a little bit confusing, what tool should you use and how do they work? [*Google Page Speed Insight plugin*](/documentation/sitespeed.io/google-page-speed-insights/) runs Lighthouse on Google servers and also collect Chrome User Experience data. If you run the [*Lighthouse plugin*](/documentation/sitespeed.io/lighthouse/) Lighthouse will run on your own machine. The [*Chrome User Experience Report plugin*](/documentation/sitespeed.io/crux/) collects data from the CrUx API that is collected from real Chrome users that access the website AND have the sync feature turned on in Chrome (=accepting Google collect the metrics).
 
 ## Store the data
 By default you can choose to store your metrics in a time series database (Graphite or InfluxDB).
@@ -213,3 +213,22 @@ And a couple of generic things that will make your metrics differ:
  * **Connectivity matters** -  You need to set the connectivity.
  * **CPU matters** -  Running the same tests with the same tool on different machines will give different results.
  * **Your page matters** - It could happen that your page has different sweat spots on connectivity (that makes the page render faster) so even a small change, will make the page much slower (we have that scenario on Wikipedia).
+
+
+## Difference in metrics between sitespeed.io https://pagespeed.web.dev
+
+When analyzing web performance data, it's important to understand the source and context of the metrics. The data from the Chrome User Experience Report represents metrics collected by Chrome from users who *"consented"* to share their browsing data. This report reflects the 75th percentile of user experiences, meaning that for the given metric, 75% of the sampled users experienced that performance level or better. For instance, in the example below, 75% of users had a Largest Contentful Paint (LCP) faster than 1.4 seconds, across various devices and network conditions.
+
+![webdev](https://github.com/sitespeedio/sitespeed.io/assets/540757/aacf206a-24d4-4537-8d57-ebf055d58774)
+{: .img-thumbnail}
+
+Is this data useful? Absolutely, especially if you don’t have your own real user monitoring (RUM) metrics. However, it's important to note that this data is limited to Chrome users who agreed to data collection, potentially skewing the metrics if your audience uses a broader range of browsers like Safari, Edge, or Firefox.
+
+To optimize your sitespeed.io tests, use these insights to mirror the experiences of the 75th percentile of your user base. For example, you can adjust network throttling in sitespeed.io to match the Time to First Byte (TTFB) reported in the Chrome data. Then, compare First Contentful Paint (FCP) and LCP metrics. If they don't align, consider adjusting CPU throttling, or better yet, test on actual mobile devices. More information on CPU benchmarking for testing, such as with Wikipedia, can be found [here](https://www.sitespeed.io/documentation/sitespeed.io/cpu-benchmark/).
+
+sitespeed.io even offers a [Chrome User Experience Report plugin](https://www.sitespeed.io/documentation/sitespeed.io/crux/) that lets you directly pull this data from Google for comparison with your sitespeed.io results.
+
+In summary, consider this approach:
+
+1. If you have your own RUM metrics, use them to calibrate your sitespeed.io tests.
+2. If not, leverage the Chrome User Experience data, keeping in mind its potential limitations, to guide your testing and optimization efforts.

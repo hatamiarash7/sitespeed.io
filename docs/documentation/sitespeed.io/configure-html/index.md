@@ -30,7 +30,7 @@ When your test, the pages page is generated where you can compare all the URLs t
 You can configure which metrics to show in the columns with the `--html.pageSummaryMetrics` cli parameter. Pass it multiple times to add multiple columns or use the configuration file json and create an array with metrics that you want use.
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --html.pageSummaryMetrics timings.pageLoadTime  --html.pageSummaryMetrics requests.total https://www.sitespeed.io 
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --html.pageSummaryMetrics timings.pageLoadTime  --html.pageSummaryMetrics requests.total https://www.sitespeed.io 
 ~~~
 
 Or use a configuration json:
@@ -67,7 +67,7 @@ The start page with summary boxes are also configurable. You can choose which me
 It follows the same pattern as page columns and uses the same friendly names. 
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --html.summaryBoxes timings.pageLoadTime  --html.summaryBoxes requests.total https://www.sitespeed.io 
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --html.summaryBoxes timings.pageLoadTime  --html.summaryBoxes requests.total https://www.sitespeed.io 
 ~~~
 
 
@@ -89,11 +89,11 @@ Or use a configuration json:
 
 # Configure the thresholds for red/yellow/green summary boxes
 
-You can override the default configurations that definees the colors of the summary boxes. The default code is set [here](https://github.com/sitespeedio/sitespeed.io/blob/master/lib/plugins/html/setup/summaryBoxesDefaultLimits.js) and is a good starting point for what you can set.
+You can override the default configurations that defines the colors of the summary boxes. The default code is set [here](https://github.com/sitespeedio/sitespeed.io/blob/main/lib/plugins/html/setup/summaryBoxesDefaultLimits.js) and is a good starting point for what you can set.
 
 Define your JSON file with the limits and feed it to sitespeed.io with `--html.summaryBoxesThresholds`.
 
-Say that you are testing on a slow 3g connection and the default settings for first paint is unreleasistic (1000 ms for green and over 2000 gives you red). Create a JSON file name it summaryLimits.json:
+Say that you are testing on a slow 3g connection and the default settings for first paint is unrealistic (1000 ms for green and over 2000 gives you red). Create a JSON file name it summaryLimits.json:
 
 ~~~json
 {
@@ -108,12 +108,12 @@ Say that you are testing on a slow 3g connection and the default settings for fi
 
 And then run:
  ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --html.summaryBoxesThresholds summaryLimits.json https://www.sitespeed.io 
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --html.summaryBoxesThresholds summaryLimits.json https://www.sitespeed.io 
 ~~~
 
 
 # Configurable metrics 
-Here are the different metrics that you can show in the summary boxes or in the page HTML. Any metric missing? [Make a PR](https://github.com/sitespeedio/sitespeed.io/blob/master/lib/support/friendlynames.js) or [create a issue](https://github.com/sitespeedio/sitespeed.io/issues/new)!
+Here are the different metrics that you can show in the summary boxes or in the page HTML. Any metric missing? [Make a PR](https://github.com/sitespeedio/sitespeed.io/blob/main/lib/support/friendlynames.js) or [create a issue](https://github.com/sitespeedio/sitespeed.io/issues/new)!
 
 
 ~~~

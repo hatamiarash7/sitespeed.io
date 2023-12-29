@@ -10,7 +10,7 @@ nav: blog
 
 # Sitespeed.io 8.0 and Browsertime 4.0
 
-There are so many new and great thing in this release and we will focus on a couple of new things in this blog post. You can read about the rest of the changes in the [changelog](https://github.com/sitespeedio/browsertime/blob/master/CHANGELOG.md) for Browsertime and the [changelog](https://github.com/sitespeedio/sitespeed.io/blob/master/CHANGELOG.md) for sitespeed.io.
+There are so many new and great thing in this release and we will focus on a couple of new things in this blog post. You can read about the rest of the changes in the [changelog](https://github.com/sitespeedio/browsertime/blob/main/CHANGELOG.md) for Browsertime and the [changelog](https://github.com/sitespeedio/sitespeed.io/blob/main/CHANGELOG.md) for sitespeed.io.
 
 Lets talk about:
 - [Testing multiple pages within a browser session](#testing-multiple-pages-within-a-browser-session)
@@ -32,7 +32,7 @@ Lets say tou want to test the following user journey: A user first visits the st
 You can do that now by just adding the ```--multi``` parameter:
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --multi https://www.sitespeed.io https://www.sitespeed.io/documentation/ https://www.sitespeed.io/documentation/sitespeed.io/
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --multi https://www.sitespeed.io https://www.sitespeed.io/documentation/ https://www.sitespeed.io/documentation/sitespeed.io/
 ~~~
 
 If you leave out ```--multi``` each and every URL will be tested by starting a new browser session with the cached cleared between each URL.
@@ -49,7 +49,7 @@ module.exports = async function(context, commands) {
 
 And run it with 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --multi script.js
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --multi script.js
 ~~~
 
 The new scripting capabilities adds a couple of commands to make scripting easier ([see the documentation](../documentation/sitespeed.io/scripting/)). And you can still also use raw Selenium if you prefer that.
@@ -128,7 +128,7 @@ module.exports = async function(context, commands) {
 And then you run it by passing on the script file, using  ```--spa``` to notify that you are testing a single page application and ```--multi``` that you test multiple pages withing one run. 
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} thirtydays.js --spa --multi
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} thirtydays.js --spa --multi
 ~~~
 
 Read the full [documentation](../documentation/sitespeed.io/spa/) for testing your single page application.
@@ -155,7 +155,7 @@ We have updated our dashboards to include new metrics like Privacy score from th
 ![Compare to last week]({{site.baseurl}}/img/new-dashboard-8.0.jpg)
 {: .img-thumbnail}
 
-You can get the [updated dashboards from GitHub](https://github.com/sitespeedio/grafana-bootstrap-docker/tree/master/dashboards/graphite) and check them out at [dashboard.sitespeed.io](https://dashboard.sitespeed.io/d/000000044/page-timing-metrics?orgId=1).
+You can get the [updated dashboards from GitHub](https://github.com/sitespeedio/grafana-bootstrap-docker/tree/main/dashboards/graphite) and check them out at [dashboard.sitespeed.io](https://dashboard.sitespeed.io/d/000000044/page-timing-metrics?orgId=1).
 
 ## New budget configuration
 One problem before 8.0 was that it was really hard to configure a performance budget: You needed to use the internal data structure and that sucks. Looking at other tools we could see that configuring a budget is usually hard. That's why we are introducing a new way in 8.0 (if you where using the old configuration pre 8.0, don't worry, that will continue to work).

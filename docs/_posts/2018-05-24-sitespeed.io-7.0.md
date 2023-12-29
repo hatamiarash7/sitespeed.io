@@ -62,13 +62,13 @@ Read more about the all changes in [Browsertime 3.0](/browsertime-3.0/).
 The Docker container uses the latest release of Chrome stable and a beta release of Firefox 61. We use Firefox 61 so that the new [HAR Export trigger](https://github.com/devtools-html/har-export-trigger) works.
 
 ### WebPageReplay support using Docker
-We had it in alpha/beta for a while and now it's there in our default container: [WebPageReplay](https://github.com/catapult-project/catapult/blob/master/web_page_replay_go/README.md).
+We had it in alpha/beta for a while and now it's there in our default container: [WebPageReplay](https://github.com/catapult-project/catapult/blob/main/web_page_replay_go/README.md).
 
 WebPageReplay is proxy that first records your web site and then replay it locally. That can help you find performance regression in the front-end code easier: Latency/server timings are constant.
 
 You can run like this:
 <code>
-docker run --cap-add=NET_ADMIN --shm-size=1g --rm -v "$(pwd)":/sitespeed.io -e REPLAY=true -e LATENCY=100 sitespeedio/sitespeed.io https://en.wikipedia.org/wiki/Barack_Obama
+docker run --cap-add=NET_ADMIN --shm-size=1g --rm -v "$(pwd):/sitespeed.io" -e REPLAY=true -e LATENCY=100 sitespeedio/sitespeed.io https://en.wikipedia.org/wiki/Barack_Obama
 </code>
 
 Here are a couple of examples from our real world tests. We test on Digital Ocean Optimized Droplets 4 gb memory with 2 vCPUs. We test both with connectivity set to cable (to try to minimize the impact of flaky internet) and one tests using WebPageReplay. We tests with the same amount of runs on the same machine.
@@ -162,6 +162,6 @@ For plugin makers or plugin users that uses screenshots or Chrome trace logs the
 ## What's next
 The coming weeks/month we going to take care of bugs, concentrate on making a better guide to deploy sitespeed.io and then it's time for summer vacation :)
 
-Checkout the full [Changelog](https://github.com/sitespeedio/sitespeed.io/blob/master/CHANGELOG.md) for all changes.
+Checkout the full [Changelog](https://github.com/sitespeedio/sitespeed.io/blob/main/CHANGELOG.md) for all changes.
 
 /Peter

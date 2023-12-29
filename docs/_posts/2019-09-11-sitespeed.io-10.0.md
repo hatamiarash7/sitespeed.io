@@ -27,7 +27,7 @@ So what's new in the latest version?
 With the new release you can automate parts of your accessibility testing using [Axe](https://github.com/dequelabs/axe-core). You can enable Axe tests with `--axe.enable`. It will run after all other metrics is collected.
 
 ```bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --axe.enable https://www.sitespeed.io
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --axe.enable https://www.sitespeed.io
 ```
 
 It will generate a new result tab in the page summary HTML, where you can see on a high level all violations:
@@ -90,7 +90,7 @@ If you drive WebPageTest and disabled Browsertime, the annotation will show the 
 
 ## Dashboards updated
 
-We have updated all the default dashboards, you [download them from here](https://github.com/sitespeedio/grafana-bootstrap-docker/tree/master/dashboards/graphite).
+We have updated all the default dashboards, you [download them from here](https://github.com/sitespeedio/grafana-bootstrap-docker/tree/main/dashboards/graphite).
 
 
 ## Run your tests on Kubernetes
@@ -126,6 +126,6 @@ There are also three breaking changes:
 * Upgraded to Ubuntu Disco in the Docker container [#908](https://github.com/sitespeedio/browsertime/pull/908).
 * There's an alternative to collect Visual Metrics using the Chrome trace log, using [SpeedLine](https://github.com/paulirish/speedline) implemented in [#876](https://github.com/sitespeedio/browsertime/pull/876). Using video give more accurate metrics (at least in our testing) but maybe it could help running on Chrome on Android and add less overhead than recording a video. You can enable it with:  `--cpu --browsertime.chrome.visualMetricsUsingTrace --browsertime.chrome.enableTraceScreenshots`
 
-We have some more changes and some bug fixes that you can read about in the [changelog](https://github.com/sitespeedio/sitespeed.io/blob/master/CHANGELOG.md).
+We have some more changes and some bug fixes that you can read about in the [changelog](https://github.com/sitespeedio/sitespeed.io/blob/main/CHANGELOG.md).
 
 /Peter

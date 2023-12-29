@@ -1,4 +1,12 @@
+googleWebVitals.timeToFirstByte
+googleWebVitals.firstContentfulPaint
+googleWebVitals.largestContentfulPaint
+googleWebVitals.interactionToNextPaint
+googleWebVitals.totalBlockingTime
+googleWebVitals.cumulativeLayoutShift
 timings.firstPaint
+timings.firstContentfulPaint
+timings.largestContentfulPaint
 timings.loadEventEnd
 timings.fullyLoaded
 timings.serverResponseTime
@@ -17,6 +25,10 @@ cpu.totalBlockingTime
 cpu.maxPotentialFid
 cpu.longTasks
 cpu.longTasksTotalDuration
+browser.cpuBenchmark
+pageinfo.cumulativeLayoutShift
+pageinfo.domElements
+pageinfo.documentHeight
 requests.total
 requests.html
 requests.javascript
@@ -52,7 +64,6 @@ firstParty.requests
 firstParty.transferSize
 firstParty.contentSize
 score.score
-score.accessibility
 score.bestpractice
 score.privacy
 score.performance

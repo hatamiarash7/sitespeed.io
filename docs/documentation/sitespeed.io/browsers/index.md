@@ -22,7 +22,7 @@ You can fetch timings, run your own JavaScript and record a video of the screen.
 The latest version of Firefox should work out of the box.
 
 ### Firefox profile setup
-At the moment we setup a new profile for each run the browser do. We set up the profiles preferences like [this](https://github.com/sitespeedio/browsertime/blob/master/lib/firefox/webdriver/firefoxPreferences.js). We use Mozillas [own configuration](https://searchfox.org/mozilla-central/source/testing/talos/talos/config.py) as default with some changes + some extra configuration for performance and privacy.
+At the moment we setup a new profile for each run the browser do. We set up the profiles preferences like [this](https://github.com/sitespeedio/browsertime/blob/main/lib/firefox/webdriver/firefoxPreferences.js). We use Mozillas [own configuration](https://searchfox.org/mozilla-central/source/testing/talos/talos/config.py) as default with some changes + some extra configuration for performance and privacy.
 
 We try to disable all Firefox ping home:
  * We disable [heartbeat](https://wiki.mozilla.org/Firefox/Shield/Heartbeat).
@@ -90,25 +90,40 @@ If you need to pass on extra command line arguments to the Firefox binary you ca
 When you run Firefox in Docker you should use `--shm-size 2g` to make sure Firefox get enough shared memory (for Chrome we disabled the use of shm with --disable-dev-shm-usage).
 
 ~~~bash
-docker run --shm-size 2g --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io -b firefox
+docker run --shm-size 2g --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io -b firefox
 ~~~
 
 ## Chrome
-The latest version of Chrome should work out of the box. Latest version of stable [ChromeDriver](http://chromedriver.chromium.org) is bundled in sitespeed.io and needs to match your Chrome version.
+The latest version of Chrome should work out of the box. Latest version of stable [ChromeDriver](http://chromedriver.chromium.org) is bundled in sitespeed.io.
 
 ### Chrome setup
-When we start Chrome it is setup with [these](https://github.com/sitespeedio/browsertime/blob/master/lib/chrome/webdriver/chromeOptions.js) command line switches.
+When we start Chrome it is setup with [these](https://github.com/sitespeedio/browsertime/blob/main/lib/chrome/webdriver/chromeOptions.js) command line switches.
 
 ### Add your own Chrome args
 Chrome has a [long list](https://peter.sh/experiments/chromium-command-line-switches/) of command line switches that you can use to make Chrome act differently than the default setup. You can add those switched to Chrome with ```--chrome.args``` (repeat the argument if you have multiple arguments).
 
 When you add your command line switched you should skip the minus. For example: You want to use ```--deterministic-fetch``` then add it like ```--chrome.args deterministic-fetch```.
 
+If you want to use it in the configuration file, you can just add each arg in array. Here's an example for adding Chrome args from sitespeed.io:
+
+~~~json
+{
+    "browsertime": {
+        "chrome": {
+            "args" : [
+                "crash-test",
+                "deterministic-fetch"
+            ]
+        }
+    }
+}
+~~~
+
 ### Collect trace logs
  You can get the trace log from Chrome by adding ```--chrome.timeline```. Doing that you will see how much time the CPU spend in different categories and a trace log file that you can drag and drop into your devtools timeline.
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --chrome.timeline https://www.sitespeed.io/
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} --chrome.timeline https://www.sitespeed.io/
 ~~~
 
 You can also choose which Chrome trace categories you want to collect by adding ```--chrome.traceCategories```  to your parameters.
@@ -119,13 +134,28 @@ If you use Chrome you can collect everything that is logged to the console. You 
 ### Collect the net log
 Collect Chromes net log with ```--chrome.collectNetLog```. This is useful if you want to debug exact what happens with Chrome and your web page. You will get one log file per run.
 
+### Render blocking information
+If you use Chrome/Chromium you can get render blocking information (which requests blocks rendering). To get that from sitespeed.io  you need to get the Chrome timeline (and we get that by default). But if you wanna make sure to configure it you turn it on with the flag ```--chrome.timeline ``` or  ```--cpu```.
+
+You can see the blocking information in the waterfall. Requests that blocks has different coloring.
+![Blocking information in the waterfall]({{site.baseurl}}/img/potentially-blocking.jpg){:loading="lazy"}
+{: .img-thumbnail}
+
+You can also click on the request and see the exact blocking info from Chrome.
+![See more blocking info in the waterfall]({{site.baseurl}}/img/see-more-blocking.jpg){:loading="lazy"}
+{: .img-thumbnail}
+
+You can also see a summary on the Page Xray tab and see what kind of blocking information Chrome provides.
+![Page Xray information about render blocking]({{site.baseurl}}/img/page-xray-blocking.jpg){:loading="lazy"}
+{: .img-thumbnail}
+
 ### Choosing Chrome version
 You can choose which version of Chrome you want to run by using the ```--chrome.binaryPath``` and the full path to the Chrome binary.
 
 Our Docker container only contains one version of Chrome and [let us know](https://github.com/sitespeedio/sitespeed.io/issues/new) if you need help to add more versions.
 
 ### Use a newer version of ChromeDriver
-ChromeDriver is the driver that handles the communication with Chrome. At the moment the ChromeDriver version needs to match the Chrome version. By default sitespeed.io and Browsertime comes with the ChromeDriver version that matches the Chrome version in the Docker container. If you wanna run tests on Chrome Beta/Canary you probably need to download a later version of ChromeDriver.
+ChromeDriver is the driver that handles the communication with Chrome. By default sitespeed.io and Browsertime comes with the ChromeDriver version that matches the Chrome version in the Docker container. If you want to run tests on other Chromedriver versions, you need to download that version of ChromeDriver.
 
 You download ChromeDriver from [http://chromedriver.chromium.org](http://chromedriver.chromium.org) and then use ```--chrome.chromedriverPath``` to set the path to the new version of the ChromeDriver.
 
@@ -151,8 +181,8 @@ There are a couple of different ways to choose which device to use:
 
 * `--safari.deviceName` set the device name. Device names for connected devices are shown in iTunes.
 * `--safari.deviceUDID` set the device UDID. If Xcode is installed, UDIDs for connected devices are available via the output of instruments(1) and in the Device and Simulators window accessed in Xcode via "Window > Devices and Simulators")
-* `--safari.deviceType` set the device type. If the value of *safari:deviceType* is `iPhone`, safaridriver will only create a sessio using an iPhone device or iPhone simulator. If the value of *safari:deviceType* is `iPad`, safaridriver will only create a session using an iPad device or iPad simulator.
-* `--safari.useSimulator` if the value of useSimulator is true, safaridriver will only use iOS Simulator hosts. If the value of safari:useSimulator is false, safaridriver will not use iOS Simulator hosts. NOTE: An Xcode installation is required in order to run WebDriver tests on iOS
+* `--safari.deviceType` set the device type. If the value of *safari:deviceType* is `iPhone`, SafariDriver will only create a session using an iPhone device or iPhone simulator. If the value of *safari:deviceType* is `iPad`, SafariDriver will only create a session using an iPad device or iPad simulator.
+* `--safari.useSimulator` if the value of useSimulator is true, SafariDriver will only use iOS Simulator hosts. If the value of safari:useSimulator is false, SafariDriver will not use iOS Simulator hosts. NOTE: An Xcode installation is required in order to run WebDriver tests on iOS
 
 #### Use Safari Technology Preview
 If you have Safari Technology Preview installed you can use it to run your test. Add `--safari.useTechnologyPreview` to your test.
@@ -175,19 +205,31 @@ sitespeed.io -b edge https://www.sitespeed.io
 
 Edge use the exact same setup as Chrome (except the driver), so you use `--chrome.*` to configure Edge :) 
 
-## Choose when to end your test
-By default the browser will collect data until  [window.performance.timing.loadEventEnd happens + aprox 5 seconds more](https://github.com/sitespeedio/browsertime/blob/d68261e554470f7b9df28797502f5edac3ace2e3/lib/core/seleniumRunner.js#L15). That is perfectly fine for most sites, but if you do Ajax loading and you mark them with user timings, you probably want to include them in your test. Do that by changing the script that will end the test (```--browsertime.pageCompleteCheck```). When the scripts returns true the browser will close or if the timeout time is reached.
-
-In this example we wait 10 seconds until the loadEventEnd happens, but you can also choose to trigger it at a specific event.
+## Brave
+You can use [Brave browser](https://brave.com) by setting Brave as Chrome binary. Download Brave and run like this on OS X (make sure to adjust the path to the path to your Brave binary):
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io --browsertime.pageCompleteCheck 'return (function() {try { return (Date.now() - window.performance.timing.loadEventEnd) > 10000;} catch(e) {} return true;})()'
+sitespeed.io --chrome.binaryPath "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser" https://www.sitespeed.io
 ~~~
+
+## Choose when to end your test
+By default sitespeed.io will use JavaScript to decide when to end the test. The script will run inside the browser and it will stop the test two seconds after the *window.performance.timing.loadEventEnd* has happened. You can also define your own JavaScript that decides when to end the test or use the `--pageCompleteCheckNetworkIdle` switch that stops the tests after 5 seconds of silence on the network.
+
+Here is an example how you can create your own script, in the example we wait 10 seconds until the loadEventEnd happens, but you can also choose to trigger it at a specific event.
+
+~~~bash
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io --browsertime.pageCompleteCheck 'return (function() {try { return (Date.now() - window.performance.timing.loadEventEnd) > 10000;} catch(e) {} return true;})()'
+~~~
+
+If loadEventEnd never happens for the page, the test will wait for `--maxLoadTime` until the test stops. By default that time is two minutes (yes that is long).
 
 You can also configure how long time your current check will wait until completing with ```--pageCompleteWaitTime```. By default the pageCompleteCheck waits for 5000 ms after the onLoad event to happen. If you want to increase that to 10 seconds use ```--pageCompleteWaitTime 10000```. This is also useful if you test with *pageCompleteCheckInactivity* and it takes long time for the server to respond, you can use the *pageCompleteWaitTime* to wait longer than the default value.
 
-You can also choose to end the test after 5 seconds of inactivity that happens after loadEventEnd. Do that by adding
-```--browsertime.pageCompleteCheckInactivity``` to your run. The test will then wait for loadEventEnd to happen and no requests in the Resource Timing API the last 5 seconds. Be-aware though that the script will empty the resource timing API data for every check so if you have your own script collecting data using the Resource Timing API it will fail.
+![Navigation timeline]({{site.baseurl}}/img/navigation-timeline.jpg)
+{: .img-thumbnail}
+
+You can also choose to end the test after 5 seconds of inactivity on the newtork. Do that by adding
+```--pageCompleteCheckNetworkIdle``` to your run. The test will then wait for no traffic in the network log for 5 seconds straight and then end the test.
 
 There's is also another alternative: use ```--spa``` to automatically wait for 5 seconds of inactivity in the Resource Timing API (independently if the load event end has fired or not). If you need to wait longer, use ```--pageCompleteWaitTime```.
 
@@ -195,7 +237,7 @@ If you add your own complete check you can also choose when your check is run. B
 
 ## Custom metrics
 
-You can collect your own metrics in the browser by supplying JavaScript file(s). By default we collect all metrics inside [these folders](https://github.com/sitespeedio/browsertime/tree/master/browserscripts), but you might have something else you want to collect.
+You can collect your own metrics in the browser by supplying JavaScript file(s). By default we collect all metrics inside [these folders](https://github.com/sitespeedio/browsertime/tree/main/browserscripts), but you might have something else you want to collect.
 
 Each JavaScript file need to return a metric/value which will be picked up and returned in the JSON. If you return a number, statistics will automatically be generated for the value (like median/percentiles etc).
 
@@ -210,15 +252,15 @@ For example say we have one file called scripts.js that checks how many scripts 
 Then to pick up the script, you would run it like this:
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io --browsertime.script scripts.js -b firefox
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io --browsertime.script scripts.js -b firefox
 ~~~
 
 You will get a custom script section in the Browsertime tab.
-![Custom scripts individual page]({{site.baseurl}}/img/customscripts.png)
+![Custom scripts individual page]({{site.baseurl}}/img/customscripts.png){:loading="lazy"}
 {: .img-thumbnail}
 
 And in the summary and detailed summary section.
-![Summary page]({{site.baseurl}}/img/summary.png)
+![Summary page]({{site.baseurl}}/img/summary.png){:loading="lazy"}
 {: .img-thumbnail}
 
 Bonus: All custom scripts values will be sent to Graphite, no extra configuration needed!
@@ -228,7 +270,7 @@ Bonus: All custom scripts values will be sent to Graphite, no extra configuratio
 Visual metrics (Speed Index, Perceptual Speed Index, First and Last Visual Complete, and 85-95-99% Visual Complete) can be collected if you also record a video of the screen. If you use our Docker container you automagically get all what you need. Video and Visual Metrics is turned on by default.
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io/
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io/
 ~~~
 
 On Android you need to follow [these instructions]({{site.baseurl}}/documentation/sitespeed.io/mobile-phones/#video-and-speedindex).
@@ -245,23 +287,33 @@ For example if you want to pass on an extra native arguments to Chrome. In stand
 You can generate a TCP dump with `--tcpdump`.
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io/ --tcpdump
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io/ --tcpdump
 ~~~
 
-You can then download the tcp dump for each iteration and the SSL key log file from the result page.
+You can then download the TCP dump for each iteration and the SSL key log file from the result page.
 
 Packets will be written when the buffer is flushed. If you want to force packets to be written to the file when they arrive you can do that with `--tcpdumpPacketBuffered`.
 
 ## WebDriver
 We use the WebDriver to drive the browser. We use [Chromedriver](https://chromedriver.chromium.org) for Chrome, [Geckodriver](https://github.com/mozilla/geckodriver/releases) for Firefox, [Edgedriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/) for Edge and [Safaridriver](https://developer.apple.com/documentation/webkit/testing_with_webdriver_in_safari) for Safari.
 
-When you install sitespeed.io/Browsertime we also install the latest released driver for Chrome, Edge and Firefox. Safari comes bundled with Safari driver. For Chrome the Chromedriver version needs to match the Chrome version. That can be annying if you want to test on old browsers, coming developer versions or on Android where that version hasn't been released yet.
+When you install sitespeed.io/Browsertime we also install the latest released driver for Chrome, Edge and Firefox. Safari comes bundled with Safari driver. For Chrome the Chromedriver version needs to match the Chrome version. That can be annoying if you want to test on old browsers, coming developer versions or on Android where that version hasn't been released yet.
 
-You can download the Chromedriver yourself from the [Google repo](https://chromedriver.storage.googleapis.com/index.html) and use ```--chrome.chromedriverPath``` to help Browsertime find it or you can choose which version to install when you install sitespeed.io with a environment variable: ```CHROMEDRIVER_VERSION=81.0.4044.20 npm install ```
+You can download the ChromeDriver yourself from the [Google repo](https://chromedriver.storage.googleapis.com/index.html) and use ```--chrome.chromedriverPath``` to help Browsertime find it or you can choose which version to install when you install sitespeed.io with a environment variable: ```CHROMEDRIVER_VERSION=81.0.4044.20 npm install ```
 
 You can also choose versions for Edge and Firefox with `EDGEDRIVER_VERSION` and `GECKODRIVER_VERSION`.
 
 If you don't want to install the drivers you can skip them with `CHROMEDRIVER_SKIP_DOWNLOAD=true`, `GECKODRIVER_SKIP_DOWNLOAD=true` and `EDGEDRIVER_SKIP_DOWNLOAD=true`.
+
+## Navigation and how we run the test
+
+By default a navigation to a new page happens when Selenium (WebDriver) runs a JavaScript that sets `window.location` to the new URL. You can also choose to use WebDriver navigation (*driver.get*) by adding `--browsertime.webdriverPageload true` to your test.
+
+By default the page load strategy is set to "none" meaning sitespeed.io gets control directly after the page started to navigate from WebDriver. You can choose page load strategy with `--browsertime.pageLoadStrategy`.
+
+Then the JavaScript configured by `--browsertime.pageCompleteCheck` is run to determine when the page is finished loading. By default that script waits for the on load event to happen.  That JavaScript that tries to determine if the page is finished runs after X seconds the first time, that is configured using `--browsertime.pageCompleteCheckStartWait`. The default is to wait 5 seconds before the first check. 
+
+During those seconds the browser needs to navigate (on a slow computer it can take time) and we also want to make sure we do not run that pageCompleteCheck too often because that can infer with metrics. After the first time the complete check has run you can choose how often it runs with `--browsertime.pageCompleteCheckPollTimeout`. Default is 1.5 seconds. When the page complete check tells us that the test is finished, we stop the video and start collect metrics for that page.
 
 ## How can I disable HTTP/2 (I only want to test HTTP/1.x)?
 In Chrome, you just add the switches <code>--browsertime.chrome.args disable-http2</code>.

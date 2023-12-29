@@ -19,7 +19,7 @@ twitterdescription: Learn more on how we work with privacy, COC and sustainabili
 A couple of important things to know about our projects.
 
 ### Changelog and versioning
-We always keep a CHANGELOG in the root of directory of the project. [Here's](https://github.com/sitespeedio/sitespeed.io/blob/master/CHANGELOG.md) the one we have for sitespeed.io. We always write down the changes we do in the project.
+We always keep a CHANGELOG in the root of directory of the project. [Here's](https://github.com/sitespeedio/sitespeed.io/blob/main/CHANGELOG.md) the one we have for sitespeed.io. We always write down the changes we do in the project.
 
 We always use [semantic versioning](http://semver.org/) when we do a release.
 
@@ -27,10 +27,10 @@ We always use [semantic versioning](http://semver.org/) when we do a release.
 We take your online privacy really serious: Our [documentation site](https://www.sitespeed.io/), our [dashboard](https://dashboard.sitespeed.io) and our [compare tool](https://compare.sitespeed.io) do not use any tracking software at all (no Google Analytics or any other tracking software). We never use tracking software. None of the sitespeed.io tools call home. You can read more about privacy at our [Privacy Policy](../privacy-policy/) page.
 
 ### Code of Conduct
-When you create issues, do pull requests, use our Slack channel or contact us on email, please follow our [Code Of Conduct](https://github.com/sitespeedio/sitespeed.io/blob/master/CODE_OF_CONDUCT.md).
+When you create issues, do pull requests, use our Slack channel or contact us on email, please follow our [Code Of Conduct](https://github.com/sitespeedio/sitespeed.io/blob/main/CODE_OF_CONDUCT.md).
 
 ### Open Source
-We release our software under the [MIT License](https://github.com/sitespeedio/sitespeed.io/blob/master/LICENSE) or [Apache License 2.0](https://github.com/sitespeedio/browsertime/blob/master/LICENSE). Please respect it and respect our work: We ask you not to change the logo or the contribution to the project. Please do this to pay the respect to the many hours we put down into the project.
+We release our software under the [MIT License](https://github.com/sitespeedio/sitespeed.io/blob/main/LICENSE) or [Apache License 2.0](https://github.com/sitespeedio/browsertime/blob/main/LICENSE). Please respect it and respect our work: We ask you not to change the logo or the contribution to the project. Please do this to pay the respect to the many hours we put down into the project.
 
 ### Code and releases
 We try to have issues for everything we do (sometimes when there are small technical changes we miss that), we do PRs. Big PRs we always review them within the team.
@@ -52,7 +52,7 @@ We have stayed away from taking money contributions so far (except an award from
 We are pretty confident that how we work and how we keep sitespeed.io going, will make our project outlive many commercial web performance tools (we've been going strong the last 5 years). It's pretty simple: We do this because we love it and we have a mission to make web performance tools free and available for everyone. Commercial products always needs paying customers to keep going.
 
 ## We want to help you
-We really (yes I mean really) focus on helping you as a user. If you have a problem please [create an issue](https://github.com/sitespeedio/sitespeed.io/issues/new) or talk to us on our [Slack channel](https://sitespeedio.herokuapp.com/).
+We really (yes I mean really) focus on helping you as a user. If you have a problem please [create an issue](https://github.com/sitespeedio/sitespeed.io/issues/new) or talk to us on our [Slack channel](https://join.slack.com/t/sitespeedio/shared_invite/zt-296jzr7qs-d6DId2KpEnMPJSQ8_R~WFw).
 
 If there's a common problem or a bug and we talk about it on Slack we will kindly ask you to create an issue. Issues are great because it helps people that has the same problem.
 

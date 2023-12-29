@@ -10,7 +10,7 @@ nav: blog
 
 # sitespeed.io 12.0 and Browsertime 8.0 
 
-The [changelog for the new Browsertime 8.0](https://github.com/sitespeedio/browsertime/blob/master/CHANGELOG.md#800-2020-02-05) is massive because we have many new contributions, mainly from the Mozilla performance team! Extra special thank you to all new contributors:
+The [changelog for the new Browsertime 8.0](https://github.com/sitespeedio/browsertime/blob/main/CHANGELOG.md#800-2020-02-05) is massive because we have many new contributions, mainly from the Mozilla performance team! Extra special thank you to all new contributors:
 
 * [Nick Alexander](https://github.com/ncalexan)
 * [Denis Palmeiro](https://github.com/dpalmeiro)
@@ -58,7 +58,7 @@ If your OS support, you can get TCPdumps (desktop only). A very special thanks t
 If you run sitespeed.io you can get the TCP dump and the SSL key log file by just running:
 
 ~~~bash
-docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io/ --tcpdump
+docker run --rm -v "$(pwd):/sitespeed.io" sitespeedio/sitespeed.io:{% include version/sitespeed.io.txt %} https://www.sitespeed.io/ --tcpdump
 ~~~
 
 If you use Browsertime you can choose where you want the key log file: `SSLKEYLOGFILE=/path/to/file browsertime --tcpdump https://www.sitespeed.io` or in Docker `docker run --rm -v "$(pwd)":/browsertime -e SSLKEYLOGFILE=/browsertime/keylog.txt sitespeedio/browsertime:{% include version/browsertime.txt %} https://www.sitespeed.io/ -n 1 --tcpdump`. Implemented in [#1159](https://github.com/sitespeedio/browsertime/pull/1159).
@@ -92,6 +92,6 @@ Making Sharp an optional requirement as proposed by [Nick Alexander](https://git
 
 Move visualmetrics.py to a python package [#1148](https://github.com/sitespeedio/browsertime/pull/1148) - thank you [Tarek Ziade](https://github.com/tarekziade)!
 
-Checkout the [Browsertime changelog](https://github.com/sitespeedio/browsertime/blob/master/CHANGELOG.md#800-2020-02-05) for the massive list of all things that have been fixed in latest 8.0 release.
+Checkout the [Browsertime changelog](https://github.com/sitespeedio/browsertime/blob/main/CHANGELOG.md#800-2020-02-05) for the massive list of all things that have been fixed in latest 8.0 release.
 
 /Peter
